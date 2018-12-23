@@ -17,8 +17,7 @@ async function start() {
     app.use(bodyParser());
     app.use(new KoaRouter().allowedMethods());
 
-    app.use(router.getPublicAppRouteTable().routes());
-    app.use((await router.getPrivateAppRouteTable()).routes());
+    app.use(router.getRouteTable().routes());
 
     app.listen(config.server.port);
 }

@@ -31,6 +31,7 @@ exports.schemas = {
     addBody              : Joi.object({
         name: Joi.string().invalid('MACHINE_GUN', 'PISTOL').required(),
         bullets : Joi.number().min(0).max(10).required(),
-        info: Joi.string().min(1).max(1000).optional()
+        info: Joi.string().min(1).max(1000).optional(),
+        level: Joi.string().min(1).max(100).optional()
     }).unknown()
 };

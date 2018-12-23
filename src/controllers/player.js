@@ -1,17 +1,33 @@
 'use strict';
 
+const Joi        = require('joi');
+const repository = require('../services/repository');
+
+
 exports.add = (ctx) => {
+    const validationResult = Joi.validate(ctx.request.body, addPlayerSchema);
+    if (validationResult.error) {
+        ctx.status = 400;
+        ctx.body   = validationResult.message;
+        return;
+    }
+
     ctx.body   = {
-        id: repository.add(ctx.request.body)
+        id: repository.add(validationResult.value)
     };
     ctx.status = 200;
 };
 
-exports.schemas = {
-    addBody: Joi.object({
-        name  : Joi.string().required(),
-        age   : Joi.number().min(0).max(10),
-        level: Joi.number().min(1).max(100),
-        birth : Joi.string().isoDate()
-    }).and('age', 'birth').unknown()
+exports.get = (ctx) => {
+    ctx.body   = {
+        id: repository.get(ctx.params.id)
+    };
+    ctx.status = 200;
 };
+
+const addPlayerSchema = Joi.object({
+    name : Joi.string().required(),
+    age  : Joi.number().min(0).max(10).optional(),
+    level: Joi.number().min(1).max(100).optional().default(1),
+    birth: Joi.string().isoDate().optional()
+}).and('age', 'birth').unknown();
